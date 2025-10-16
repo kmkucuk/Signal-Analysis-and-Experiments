@@ -11,7 +11,6 @@ A collection of **psychophysics/RT tasks**, **parallel‑port trigger helpers**,
 ```
 scripts/
 ├─ experiments/
-│  ├─ checkerboard/                # Checkerboard stimulus tasks (w/ instructions & keyboard reg)
 │  ├─ cued_sam/                    # Cued Shape-from-Motion / attention task (with analyses)
 │  ├─ flanker_task/                # Eriksen flanker variants (keyboard; +_port versions)
 │  ├─ gunce_tutorial/              # Timing demos (vbl, etc.)
@@ -53,10 +52,6 @@ scripts/
 - **Cued SAM**  
   - Keyboard only / no port: `experiments/cued_sam/new_cued_SAM_keyboard_colorPosition_noPort.m`  
   - Port version: `experiments/cued_sam/new_cued_SAM_port_colorPosition.m`
-
-- **Checkerboard**  
-  - `experiments/checkerboard/checkerboardcentercoordinateversion.m`  
-  - Port version: `experiments/checkerboard/checkerboard_port.m`
 
 - **Shape Task**  
   - `experiments/shape_task/shape_task.m` (and `shape_task_sensory.m`)
