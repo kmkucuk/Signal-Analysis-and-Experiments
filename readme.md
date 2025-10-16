@@ -1,4 +1,4 @@
-This repo belongs to a period when I only coded for data analyses and experiments for an EEG lab during my graduate education. I learned to code while I created this repo back in the day, so you'll find most of the code here to be awful.
+This repo belongs to a period when I only coded for data analyses and experiments for an EEG lab during my graduate education. I learned to code while I created this repo back in the day, so you'll find most code here to be awful.
 
 # MATLAB EEG Experiments & Analysis
 
