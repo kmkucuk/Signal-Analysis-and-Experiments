@@ -28,7 +28,6 @@ scripts/
 ├─ preprocess/                     # ERP/TF preprocessing helpers (baseline, GA, ISPC, etc.)
 ├─ signal_analysis/                # Wavelets, FFT, filters, downsampling
 ├─ statistics/                     # Factorial ANOVA, effect sizes, stat table builders
-├─ people/                         # (Aux assets; optional)
 ├─ plot/                           # (Reserved for plotting utilities)
 └─ shape_data/                     # (Aux data; optional)
 ```
