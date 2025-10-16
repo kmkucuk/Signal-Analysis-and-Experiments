@@ -1,18 +1,15 @@
-This repo belongs to a period when I only coded for data analyses and experiments for an EEG lab. I learned to code with this repo back in the day, so you'll find most of the code here to be awful; just like my recent repos. 
+This repo belongs to a period when I only coded for data analyses and experiments for an EEG lab during my graduate education. I learned to code while I created this repo back in the day, so you'll find most of the code here to be awful.
 
-You'll find different cognitive experiments under "experiments" folder, most of which follow the same structure in terms of play loop. Check Flanker or Checkerboard ones for easier code. 
+# MATLAB EEG Experiments & Analysis
 
-Go to "preprocess" if you look for EEG preprocessing methods. 
+A collection of **psychophysics/RT tasks**, **parallel‑port trigger helpers**, and an **EEG preprocessing & time‑frequency toolbox** for MATLAB. It includes ready‑to‑run experiments (Flanker, Simon, SART, Cued SAM, Checkerboard, Shape task, Visual Gratings, Necker) and analysis utilities (BrainVision import, preprocessing, wavelets/FFT, and factorial ANOVAs).
 
-You'll find somewhat of a module I created under "signal analysis", I used that for EEG analysis pipelines. You can get some of the advanced EEG connectivity methods there. 
+> Tested with MATLAB R2019a+ on Windows. Psychtoolbox‑3 is recommended for display/timing. Parallel‑port helpers target Windows (InpOutx64/io64).
 
-You'll find EEG and other data visualization methods under "plot". 
+---
 
-<<<<<<< HEAD
-Data restructuring/indexing functions can be found under "shape_data". 
+## Folder Structure
 
-You can find some basic statistical methods under "statistics" (e.g. calculating F effect). 
-=======
 ```
 scripts/
 ├─ experiments/
@@ -168,5 +165,4 @@ If you use these scripts in published work, please cite the repository and ackno
 ## License
 
 Add your preferred license (e.g., MIT).
->>>>>>> 4be81f18104396b931c8a6a1164b9417a76eb0cb
 
