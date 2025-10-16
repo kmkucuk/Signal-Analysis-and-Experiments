@@ -179,6 +179,7 @@ iti_display_vector = repmat(iti_vector,1,ceil(trialCount/length(iti_vector)));
 % randomize inter-trial interval values 
 randomizationIndex = randperm(length(iti_display_vector));
 iti_display_vector = iti_display_vector(:,randomizationIndex);
+
 %% create response table 
 
 responseTableColumns =  {'trialNo','condition','stimulus_type','AccuracyText','AccuracyNumber','KeyName','RT','pressDateTime'};
@@ -190,6 +191,7 @@ KbQueueCreate;
 KbQueueStart;
 
 registeryIteration = 1;
+
 %% experiment loop 
 experimentStartTime = GetSecs(); % get current time
 
@@ -209,15 +211,15 @@ for trial_iteration = 1:length(stimulusPresentationMatrix)
     % trial parameters
     
     % stimulus type (cong-left, cong-right etc.)
-    stimulusType = stimulusPresentationMatrix{2,trial_iteration};
+    stimulusType            = stimulusPresentationMatrix{2,trial_iteration};
     % correct response byte 
-    correctResponse = stimulusPresentationMatrix{3,trial_iteration};
+    correctResponse         = stimulusPresentationMatrix{3,trial_iteration};
     % stimulus condition port signal (cong=20, incong=21 etc.)
-    conditionPortSignal = stimulusPresentationMatrix{4,trial_iteration};
+    conditionPortSignal     = stimulusPresentationMatrix{4,trial_iteration};
     % stimulus type port signal (cong-left=30, cong-right=31 etc.)
-    stimulusPortSignal = stimulusPresentationMatrix{5,trial_iteration};
+    stimulusPortSignal      = stimulusPresentationMatrix{5,trial_iteration};
     % current condition name (cong, incong)
-    currentCondition = stimulusPresentationMatrix{6,trial_iteration};
+    currentCondition        = stimulusPresentationMatrix{6,trial_iteration};
     
     if trial_iteration == 1
         stimulus_offset = experimentStartTime;        
@@ -225,13 +227,13 @@ for trial_iteration = 1:length(stimulusPresentationMatrix)
     
     Screen('DrawTexture',window,fixation_texture);
     % display fixation cross 
-    fixation_onset = Screen('Flip', window , stimulus_offset + inter_trial_interval);  
+    fixation_onset          = Screen('Flip', window , stimulus_offset + inter_trial_interval);  
     
     
     Screen('DrawTexture',window,stimulusPresentationMatrix{1,trial_iteration});
     
     % display stimulus 
-    stimulus_onset = Screen('Flip',window,fixation_onset+fixation_duration); 
+    stimulus_onset          = Screen('Flip',window,fixation_onset+fixation_duration); 
     
     % send condition port marker (cong, incong, neut)
     sendParallelSignal(portAddress,conditionPortSignal,ioObj)  % send parallel port signal for stimulus marker right after display was made on screen
@@ -245,12 +247,14 @@ for trial_iteration = 1:length(stimulusPresentationMatrix)
     KbQueueFlush;
     
     while 1
+        
         % response registery between stimulus onset and stimulus offset 
         checkPauseOrExitKeys;
         if ~exitmarker
             break
         end
-        terminateLoop = (GetSecs() - stimulus_onset) >= (stimulus_duration-ifi); 
+        terminateLoop = (GetSecs() - stimulus_onset) >= (stimulus_duration-ifi);
+        
         if terminateLoop
             % end keyboard press registery if stimulus duration is about to
             % be exceeded.
@@ -259,7 +263,7 @@ for trial_iteration = 1:length(stimulusPresentationMatrix)
         
         if enableResponseRegistry
             
-            currentResponseByte = double(io64(ioObj,portAddress(2)));   % second port address is response input
+            currentResponseByte     = double(io64(ioObj,portAddress(2)));   % second port address is response input
             Pressed  = noPressByte ~= currentResponseByte;
 
             if Pressed == 1
@@ -394,14 +398,14 @@ for trial_iteration = 1:length(stimulusPresentationMatrix)
             Pressed  = noPressByte ~= currentResponseByte;
 
             if Pressed == 1
+                
                 enableResponseRegistry = 0; % stop registering responses until the next trial. 
                 pressTime = GetSecs();
                 % calculate reaction time 
-                reactionTime = pressTime - stimulus_onset;         
-                
+                reactionTime = pressTime - stimulus_onset;                
                 
                 % find out which of the port buttons were pressed 
-                responseIndex       = findIndices(response_bytes,currentResponseByte);                
+                responseIndex       = findIndices(response_bytes,currentResponseByte);
                 responseAccuracy    = correctResponse == currentResponseByte;
                 % get the name of the button press
                 responseName        = response_bytes_names{responseIndex};

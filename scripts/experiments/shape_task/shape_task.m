@@ -103,7 +103,6 @@ blackColor = [0 0 0];
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
 noPressByte                     = 120;
-
 one_pressByte                   = 248;
 two_pressByte                   = 88; 
 three_pressByte                 = 248;
@@ -131,19 +130,61 @@ responseDuration = 1.5;
 % stimulusVector = {"square","circle","triangle","octagon";1,1,1,1};
 
 % stimulus vector for FOUR-CHOICE TASK
-stimulusVector = {"square","circle","triangle","octagon";1,2,3,4};
+% stimulusVector = {"square","circle","triangle","octagon";1,2,3,4};
 
-presentationVector = repmat(stimulusVector,1,36);
-ISIvector = [2.125,2.043,1.939,1.787,2.002,2.262,2.263,2.076,2.248,2.146,1.623,2.004,1.847,1.592,1.647,1.698,2.172,1.931,2.195,1.757,1.509,2.032,1.779,2.447,2.407,1.893,1.524,2.172,2.338,2.472,1.556,1.950,2.083,2.187,2.220,2.150,2.227,1.874,2.082,1.616,1.557,2.480,1.785,2.095,2.463,1.685,1.693,1.841,2.433,1.891,1.773,1.652,1.897,1.875,1.631,1.935,1.591,2.115,1.510,2.073,2.290,1.735,1.948,2.069,1.561,1.996,2.142,1.721,2.337,2.472,2.347,2.006,1.779,2.247,1.737,2.458,2.120,2.100,1.672,1.590,1.755,2.359,2.411,2.200,2.225,1.730,2.076,2.311,1.904,2.489,1.590,1.821,2.011,1.560,2.226,2.057,2.029,2.330,2.359,2.289,1.818,1.952,2.252,1.609,1.609,1.770,2.025,2.473,2.211,1.812,1.791,2.351,2.412,2.139,1.755,1.588,2.339,2.085,2.449,1.561,2.085,1.785,2.328,1.691,1.942,1.893,2.327,2.177,1.707,1.818,1.633,2.172,2.071,1.669,1.647,1.976,2.409,2.052,1.532,1.553,2.305,1.951,1.883,2.290];
-%% below 5 lines are for creating randomized ISI vector
-% ISIvector = [] 
-% for k = 1:length(presentationVector)
-%     
-%     ISIvector = [ISIvector randi([1500,2500])/1000];
-%     
-% end
-responseTable             = cell(length(presentationVector),9);
-responseTable(1,:)        = {'trialNo','Stimulus_Type','KeyName','responseByte','AccuracyText','Accuracy','reactionTime','stimulusStartTime','Date_Time'};
+% % stimulus vector for sensory shape task 
+stimulusVector = {'square','circle','triangle','octagon'};
+% portVector =       {20,     21,         22,         23};
+
+% sequences (4 trials each)
+sequenceA = {'square','triangle','circle','octagon';1,3,2,4;20,22,21,23};
+sequenceB = {'triangle','octagon','square','circle';3,4,1,2;22,23,20,21};
+sequenceC = {'octagon','circle','triangle','square';4,2,3,1;23,21,22,20};
+sequenceD = {'circle','square','octagon','triangle';2,1,4,3;21,20,22,23};
+
+% sequence orders (16 trials each)
+sequenceOrder1 = cat(2,sequenceA,sequenceB,sequenceC,sequenceD);
+sequenceOrder2 = cat(2,sequenceB,sequenceD,sequenceA,sequenceC);
+sequenceOrder3 = cat(2,sequenceD,sequenceC,sequenceB,sequenceA);
+sequenceOrder4 = cat(2,sequenceC,sequenceA,sequenceD,sequenceB);
+allsequences = {sequenceOrder1,sequenceOrder2,sequenceOrder3,sequenceOrder4;'s1','s2','s3','s4'};
+
+
+% create full experiment 
+stimulusRepetition = 36;
+presentationMatrix = {};
+drawingsequences = repmat(allsequences,[1 2]);
+sequenceNames = [];
+for k = 1:9
+    
+    if k == 1
+        presentationMatrix = cat(2,presentationMatrix,sequenceOrder1);
+        sequenceNames = [sequenceNames, allsequences{2,1}];
+    else
+        randindx = randi([1 size(drawingsequences,2)],1,1);
+
+        currentsequence = drawingsequences{1,randindx};
+        sequenceNames = [sequenceNames, drawingsequences{2,randindx}];
+        
+        drawingsequences(:,randindx)=[];
+        presentationMatrix = cat(2,presentationMatrix,currentsequence);
+        
+
+    end
+end
+
+        
+
+stimduration = .300; %%% Stimulus duration (.98xxx seconds)
+responseDuration = 1.5;
+
+ISIvector =  1.75:.25:3; %[2.125,2.043,1.939,1.787,2.002,2.262,2.263,2.076,2.248,2.146,1.623,2.004,1.847,1.592,1.647,1.698,2.172,1.931,2.195,1.757,1.509,2.032,1.779,2.447,2.407,1.893,1.524,2.172,2.338,2.472,1.556,1.950,2.083,2.187,2.220,2.150,2.227,1.874,2.082,1.616,1.557,2.480,1.785,2.095,2.463,1.685,1.693,1.841,2.433,1.891,1.773,1.652,1.897,1.875,1.631,1.935,1.591,2.115,1.510,2.073,2.290,1.735,1.948,2.069,1.561,1.996,2.142,1.721,2.337,2.472,2.347,2.006,1.779,2.247,1.737,2.458,2.120,2.100,1.672,1.590,1.755,2.359,2.411,2.200,2.225,1.730,2.076,2.311,1.904,2.489,1.590,1.821,2.011,1.560,2.226,2.057,2.029,2.330,2.359,2.289,1.818,1.952,2.252,1.609,1.609,1.770,2.025,2.473,2.211,1.812,1.791,2.351,2.412,2.139,1.755,1.588,2.339,2.085,2.449,1.561,2.085,1.785,2.328,1.691,1.942,1.893,2.327,2.177,1.707,1.818,1.633,2.172,2.071,1.669,1.647,1.976,2.409,2.052,1.532,1.553,2.305,1.951,1.883,2.290];
+ISIvector = repmat(ISIvector,1,size(presentationMatrix,2)/length(ISIvector));
+ISIvector = ISIvector(randperm(length(ISIvector)));
+% sca
+responseTableHeaders        = {'trialNo','Stimulus_Type','KeyName','responseByte','AccuracyText','Accuracy','reactionTime','stimulusStartTime','Date_Time'};
+responseTable               = cell(length(presentationVector),length(responseTableHeaders));
+responseTable(1,:)          = responseTableHeaders;
 
 
 startTime=GetSecs(); %%% Marks the start of the experiment. 
@@ -151,8 +192,9 @@ KbQueueCreate;
 KbQueueStart;
 
 exitmarker = 0; % logical, if 1 = quit experiment, 0 = continue experiment loop
-trialIteration=0;    %%% Iteration variable for trials. 
-while 1
+triali=0;    % Iteration variable for trials. 
+
+for triali = 1:size(presentationMatrix,2)
     
     checkPauseOrExitKeys;
     
@@ -160,17 +202,14 @@ while 1
         break;
     end    
     
-    tic;
-    %randi([1500,2500])/1000; % random number between 1.5 to 2.5 s
     
-    trialIteration=trialIteration+1;    
-    isiDuration = ISIvector(trialIteration);
+    isiDuration = ISIvector(triali);
     % stimulusType: what is the name of the current stimulus? (e.g.
     % "circle")
-    stimulusType            = presentationVector{1,trialIteration};
+    stimulusType            = presentationMatrix{1,triali};
     
     % correctResponseIndex: which of the bytes in "responseBytes" variable is the correct answer?
-    correctResponseIndex    = presentationVector{2,trialIteration}; 
+    correctResponseIndex    = presentationMatrix{2,triali}; 
     
     if strcmp(stimulusType,"square")        
         
@@ -194,17 +233,17 @@ while 1
     end
     
 
-    if trialIteration >1
+    if triali >1
         
-        stim_time=stim_vbl; 
+        previousStimTime=stimOnset; 
         
     else
         
-        stim_time=startTime; %%% equals stim presentation time to exp start time for the first trial. This is required for Screen('Flip') function's [when] argument. 
+        previousStimTime=startTime; %%% equals stim presentation time to exp start time for the first trial. This is required for Screen('Flip') function's [when] argument. 
         
     end
     
-    stim_vbl=Screen('Flip', window,stim_time+isiDuration+responseDuration);    
+    stimOnset=Screen('Flip', window,previousStimTime+isiDuration+responseDuration);    
     %% send stimulus marker to EEG recorder
 %     sendParallelSignal(portAddress,portMarker,ioObj);
 %     % end signal %
@@ -212,10 +251,10 @@ while 1
     %%  end stimulus marker signal
 %     endParallelSignal(portAddress,ioObj)    
     
-    stim_vbl-stim_time %#ok<NOPTS>    
+    stimOnset-previousStimTime %#ok<NOPTS>    
     
     exitKeyReg=1;
-    while GetSecs()-stim_vbl >=  responseDuration
+    while GetSecs()-stimOnset >=  responseDuration
         checkPauseOrExitKeys; % checks for 'p' or 'ESCAPE' presses: i) pauses or ii) terminates the experiment, respectively. 
             if ~exitmarker
                 break
@@ -226,7 +265,7 @@ while 1
         
         if Pressed == 1
             pressTime = GetSecs();
-            reactionTime = pressTime - stim_vbl; 
+            reactionTime = pressTime - stimOnset; 
         end
         
         responseIndex       = findIndices(response_bytes,currentResponseByte);
@@ -252,24 +291,24 @@ while 1
         fprintf('response name: %s \n',responseName);
         fprintf('accuracy     : %s \n',accuracyText);
         fprintf('reaction time: %s \n',reactionTime);
-        fprintf('stimulus time: %s \n',stim_vbl-startTime);
+        fprintf('stimulus time: %s \n',stimOnset-startTime);
         fprintf('date         : %s \n',char(datetime));
         
-        responseTable{trialIteration+1,1}=trialIteration;
-        responseTable{trialIteration+1,2}=stimulusType;
-        responseTable{trialIteration+1,3}=responseName;
-        responseTable{trialIteration+1,4}=currentResponseByte;  % keyboard key name
-        responseTable{trialIteration+1,5}=accuracyText;         % accuracy text
-        responseTable{trialIteration+1,6}=responseAccuracy;     % accuracy text        
-        responseTable{trialIteration+1,7}=reactionTime;         % estimated RT  
-        responseTable{trialIteration+1,8}=stim_vbl-startTime;   % stimulus start time   
-        responseTable{trialIteration+1,9}=char(datetime);       % stimulus start time   
+        responseTable{triali+1,1}=triali;
+        responseTable{triali+1,2}=stimulusType;
+        responseTable{triali+1,3}=responseName;
+        responseTable{triali+1,4}=currentResponseByte;  % keyboard key name
+        responseTable{triali+1,5}=accuracyText;         % accuracy text
+        responseTable{triali+1,6}=responseAccuracy;     % accuracy text        
+        responseTable{triali+1,7}=reactionTime;         % estimated RT  
+        responseTable{triali+1,8}=stimOnset-startTime;   % stimulus start time   
+        responseTable{triali+1,9}=char(datetime);       % stimulus start time   
     end
     
-    toc
+
     
-    isi_vbl=Screen('Flip', window,stim_vbl+stimduration); 
-    if trialIteration == length(presentationVector)
+    isi_vbl=Screen('Flip', window,stimOnset+stimduration); 
+    if triali == length(presentationVector)
         break;
     end
     

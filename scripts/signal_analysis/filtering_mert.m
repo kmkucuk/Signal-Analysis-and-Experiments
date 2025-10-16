@@ -1,4 +1,4 @@
-function [EEG2,avg_data, prcssd_data, fou,filtering,frequencies] = filtering_mert(EEG, chans,dataname, f_type, f_range, sf,filtering,alphatype)
+function [EEG2,avg_data, prcssd_data, fou,filtering,frequencies] = filtering_mert(EEG, chans,dataname, f_type, f_range, sf,filtering,newdataname,alphatype)
 
 % This script executes inverse FFT around the EEG epochs / mean values ??high-, low- or bandpass
 % filter or use notchfilter
@@ -69,18 +69,33 @@ EEG2=EEG;
 for pC = 1:length(EEG)
     
     
-    data=EEG(pC).(dataname);
+    data=EEG(pC).(dataname);    
     
+    if isempty(data)
+        continue
+    end
+    
+    chans = 1:size(data,1); 
     sw = size(data,3);
     
-    fprintf('Processing participant: %s \ngroup: %s \ncondition: %s\niteration: %d\n..',...
-        EEG(pC).subject, EEG(pC).group,EEG(pC).condition,pC);
+    if sw > 1
+        data = permute(data,[2,1,3]);
+    else
+        data = permute(data,[2,1]);
+    end    
+%     
+%     fprintf('Processing participant: %s \ngroup: %s \ncondition: %s\niteration: %d\n..',...
+%         EEG(pC).subject, EEG(pC).group,EEG(pC).condition,pC);
     
         for w = 1:sw
             
-            Trialdata = data(:,:,w);
+            if sw > 1
+                Trialdata = data(:,:,w);    
+            else
+                Trialdata = data;
+            end
 
-            for i=1:length (chans)
+            for i=1:length(chans)
                 
                 % how many data points are received
                 n = size(Trialdata,1);
@@ -166,6 +181,9 @@ for pC = 1:length(EEG)
                     % calculate power
                     fou=abs(fou)*2;
                     
+                    % cut mirrored power spectrum
+                    truedatalength = ceil(n/2);
+                    fou=fou(1:truedatalength);
                     % assemble the matrix for all channels                    
                     
                     data_gef = cat(2,data_gef, fou);
@@ -178,18 +196,28 @@ for pC = 1:length(EEG)
                 
 
             end
-
+            disp(dataname)
+            disp(w)
+            size(data_gef)
+            size(prcssd_data)            
             prcssd_data = cat(3,prcssd_data, data_gef);
             data_gef = [];
 
-        end       
-        
-        avg_data = mean(prcssd_data,3); %%% averages data across trials
+        end
         
         
-        EEG2(pC).data(:,:,:)=prcssd_data;       %%% Will register filtered data into original ALLEEG structure.
+        if size(prcssd_data,3) > 1
+            prcssd_data = permute(prcssd_data,[2,1,3]);
+            avg_data = mean(prcssd_data,3); %%% averages data across trials
+        else
+            prcssd_data = permute(prcssd_data,[2,1]);
+            avg_data = prcssd_data;
+        end
         
-        EEG2(pC).avgdata=avg_data;       %%% Will register trial-averaged data into original ALLEEG structure.
+        
+        EEG2(pC).(newdataname)=prcssd_data;       %%% Will register filtered data into original ALLEEG structure.
+        
+%         EEG2(pC).([newdataname,'avg'])=avg_data;       %%% Will register trial-averaged data into original ALLEEG structure.
 
         
         if f_type(1)=='n' && filtering    

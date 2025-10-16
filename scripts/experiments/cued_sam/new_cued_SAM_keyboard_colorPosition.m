@@ -582,10 +582,9 @@ for blockIndx=1:howManyBlocks
             if ~exitmarker
                 break
             end
-
+            
             global_iteration=global_iteration+1;
             
-
             %% FEEDBACK CONDITIONS FOR FCRTT
             
             if presentation_durations == 1  % only give feedback to first "#FCRTT_feedbackTrials" number of trials in simple RT task 
